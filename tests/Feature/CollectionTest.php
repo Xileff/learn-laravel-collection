@@ -221,4 +221,26 @@ class CollectionTest extends TestCase
         // $this->assertEquals([2, 4, 6, 8], $filtered->all()); // bakal error karena masalah index
         $this->assertEqualsCanonicalizing([2, 4, 6, 8], $filtered->all());
     }
+
+    public function testPartitioning()
+    {
+        $collection = collect([
+            'Felix' => 100,
+            'Xilef' => 70,
+            'Orevas' => 90
+        ]);
+
+        [$passed, $notPassed] = $collection->partition(function ($value, $key) {
+            return $value > 70;
+        });
+
+        $this->assertEquals([
+            'Felix' => 100,
+            'Orevas' => 90
+        ], $passed->all());
+
+        $this->assertEquals([
+            'Xilef' => 70
+        ], $notPassed->all());
+    }
 }
