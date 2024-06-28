@@ -188,4 +188,37 @@ class CollectionTest extends TestCase
         $glued = $collection->join(', ', ' and ');
         $this->assertEquals('Felix, Xilef and Orevas', $glued);
     }
+
+    public function testFilter()
+    {
+        $collection = collect([
+            'Felix' => 100,
+            'Xilef' => 70,
+            'Orevas' => 90
+        ]);
+
+        $passed = $collection->filter(function ($value, $key) {
+            return $value > 70;
+        });
+
+        $this->assertEquals([
+            'Felix' => 100,
+            'Orevas' => 90
+        ], $passed->all());
+    }
+
+    public function testFilterIndex()
+    {
+        $collection = collect([1, 2, 3, 4, 5, 6, 7, 8]);
+
+        // data ganjil akan dibuang, dan data genap tetap ada.
+        // masalahnya, index tidak berubah, jadi angka 2 indexnya tetap 1, angka 4 indexnya tetap 3, dst
+        $filtered = $collection->filter(function ($value) {
+            return $value % 2 == 0;
+        });
+
+
+        // $this->assertEquals([2, 4, 6, 8], $filtered->all()); // bakal error karena masalah index
+        $this->assertEqualsCanonicalizing([2, 4, 6, 8], $filtered->all());
+    }
 }
