@@ -177,4 +177,15 @@ class CollectionTest extends TestCase
 
         $this->assertEquals(['Felix', 'Xilef'], $flattened->all());
     }
+
+    public function testJoin()
+    {
+        $collection = collect(['Felix', 'Xilef', 'Orevas']);
+        $glued = $collection->join('-');
+        $this->assertEquals('Felix-Xilef-Orevas', $glued);
+
+        $collection = collect(['Felix', 'Xilef', 'Orevas']);
+        $glued = $collection->join(', ', ' and ');
+        $this->assertEquals('Felix, Xilef and Orevas', $glued);
+    }
 }
