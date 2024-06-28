@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Data\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\LazyCollection;
 use PhpParser\Node\Expr\FuncCall;
 use Tests\TestCase;
 
@@ -464,5 +465,21 @@ class CollectionTest extends TestCase
         // reduce(36, 9) = 45
 
         $this->assertEquals(45, $result);
+    }
+
+    public function testLazyCollection()
+    {
+        // function di sini sebagai PHP generator
+        $collection = LazyCollection::make(function () {
+            // meskipun infinite loop, tapi tidak crash karena implementasi LazyCollection
+            $i = 0;
+            while (true) {
+                yield $i;
+                $i++;
+            }
+        });
+
+        $result = $collection->take(10)->all();
+        $this->assertEqualsCanonicalizing([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], $result);
     }
 }
