@@ -406,4 +406,17 @@ class CollectionTest extends TestCase
         $result = $collection->random();
         $this->assertTrue(in_array($result, [1, 2, 3, 4, 5, 6, 7, 8, 9]));
     }
+
+    public function testCheckingExistence()
+    {
+        $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $this->assertTrue($collection->isNotEmpty());
+        $this->assertFalse($collection->isEmpty());
+        $this->assertTrue($collection->contains(1));
+        $this->assertFalse($collection->contains(0));
+        $this->assertTrue($collection->contains(function ($val, $key) {
+            return $val === 8;
+        }));
+        $this->assertFalse($collection->containsOneItem());
+    }
 }
