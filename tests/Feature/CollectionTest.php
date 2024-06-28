@@ -136,4 +136,45 @@ class CollectionTest extends TestCase
             'country' => 'Wakanda'
         ], $collection3->all());
     }
+
+    public function testCollapse()
+    {
+        $collection = collect(
+            [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9]
+            ]
+        );
+
+        $collapsed = $collection->collapse();
+
+        $this->assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9], $collapsed->all());
+    }
+
+    public function testFlatMap()
+    {
+        $collection = collect([
+            [
+                'name' => 'Felix',
+                'hobbies' => ['Coding', 'Gaming']
+            ],
+            [
+                'name' => 'Xilef',
+                'hobbies' => ['Eating', 'Sleeping']
+            ]
+        ]);
+
+        // $flattened = $collection->flatMap(function ($person) {
+        //     return $person['hobbies'];
+        // });
+
+        // $this->assertEquals(['Coding', 'Gaming', 'Eating', 'Sleeping'], $flattened->all());
+
+        $flattened = $collection->flatMap(function ($person) {
+            return $person['name'];
+        });
+
+        $this->assertEquals(['Felix', 'Xilef'], $flattened->all());
+    }
 }
