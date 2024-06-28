@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Data\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PhpParser\Node\Expr\FuncCall;
 use Tests\TestCase;
 
 class CollectionTest extends TestCase
@@ -251,5 +252,71 @@ class CollectionTest extends TestCase
         $this->assertTrue($collection->contains(function ($value, $key) {
             return $value === 'Xilef';
         }));
+    }
+
+    public function testGroupBy()
+    {
+        $collection = collect([
+            [
+                'name' => 'Felix',
+                'department' => 'IT'
+            ],
+            [
+                'name' => 'Xilef',
+                'department' => 'IT'
+            ],
+            [
+                'name' => 'Budi',
+                'department' => 'HR'
+            ]
+        ]);
+
+        $groupByKey = $collection->groupBy('department');
+        // unit test : hasil grouping yang pake collect()
+        $this->assertEquals([
+            'IT' => collect([
+
+                [
+                    'name' => 'Felix',
+                    'department' => 'IT'
+                ],
+                [
+                    'name' => 'Xilef',
+                    'department' => 'IT'
+                ]
+
+            ]),
+            'HR' => collect([
+                [
+                    'name' => 'Budi',
+                    'department' => 'HR'
+                ]
+            ])
+        ], $groupByKey->all());
+
+        $groupByFunc = $collection->groupBy(function ($value, $key) {
+            return $value['department'];
+        });
+
+        $this->assertEquals([
+            'IT' => collect([
+
+                [
+                    'name' => 'Felix',
+                    'department' => 'IT'
+                ],
+                [
+                    'name' => 'Xilef',
+                    'department' => 'IT'
+                ]
+
+            ]),
+            'HR' => collect([
+                [
+                    'name' => 'Budi',
+                    'department' => 'HR'
+                ]
+            ])
+        ], $groupByKey->all());
     }
 }
