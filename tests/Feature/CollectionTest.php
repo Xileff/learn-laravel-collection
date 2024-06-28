@@ -166,17 +166,17 @@ class CollectionTest extends TestCase
             ]
         ]);
 
-        // $flattened = $collection->flatMap(function ($person) {
-        //     return $person['hobbies'];
-        // });
-
-        // $this->assertEquals(['Coding', 'Gaming', 'Eating', 'Sleeping'], $flattened->all());
-
         $flattened = $collection->flatMap(function ($person) {
-            return $person['name'];
+            return $person['hobbies'];
         });
 
-        $this->assertEquals(['Felix', 'Xilef'], $flattened->all());
+        $this->assertEquals(['Coding', 'Gaming', 'Eating', 'Sleeping'], $flattened->all());
+
+        // $flattened = $collection->flatMap(function ($person) {
+        //     return $person['name'];
+        // });
+
+        // $this->assertEquals(['Felix', 'Xilef'], $flattened->all());
     }
 
     public function testJoin()
@@ -329,5 +329,39 @@ class CollectionTest extends TestCase
         $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         $result = $collection->slice(3, 2);
         $this->assertEqualsCanonicalizing([4, 5], $result->all());
+    }
+
+    public function testTake()
+    {
+        $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $result = $collection->take(3);
+        $this->assertEqualsCanonicalizing([1, 2, 3], $result->all());
+
+        $result = $collection->takeUntil(function ($val, $key) {
+            return $val === 3;
+        });
+        $this->assertEqualsCanonicalizing([1, 2], $result->all());
+
+        $result = $collection->takeWhile(function ($val, $key) {
+            return $val < 3;
+        });
+        $this->assertEqualsCanonicalizing([1, 2], $result->all());
+    }
+
+    public function testSkip()
+    {
+        $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        $result = $collection->skip(3);
+        $this->assertEqualsCanonicalizing([4, 5, 6, 7, 8, 9], $result->all());
+
+        $result = $collection->skipUntil(function ($val, $key) {
+            return $val === 3;
+        });
+        $this->assertEqualsCanonicalizing([3, 4, 5, 6, 7, 8, 9], $result->all());
+
+        $result = $collection->skipWhile(function ($val, $key) {
+            return $val < 3;
+        });
+        $this->assertEqualsCanonicalizing([3, 4, 5, 6, 7, 8, 9], $result->all());
     }
 }
