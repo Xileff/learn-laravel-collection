@@ -419,4 +419,15 @@ class CollectionTest extends TestCase
         }));
         $this->assertFalse($collection->containsOneItem());
     }
+
+    public function testOrdering()
+    {
+        $collection = collect([1, 3, 2, 4, 5, 7, 6, 8, 9]);
+
+        $result = $collection->sort();
+        $this->assertEqualsCanonicalizing([1, 2, 3, 4, 5, 6, 7, 8, 9], $result->all());
+
+        $result = $collection->reverse();
+        $this->assertEqualsCanonicalizing([9, 8, 7, 6, 5, 4, 3, 2, 1], $result->all());
+    }
 }
