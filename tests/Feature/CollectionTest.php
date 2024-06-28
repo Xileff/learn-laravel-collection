@@ -243,4 +243,13 @@ class CollectionTest extends TestCase
             'Xilef' => 70
         ], $notPassed->all());
     }
+
+    public function testTesting()
+    {
+        $collection = collect(['Felix', 'Xilef', 'Orevas']);
+        $this->assertTrue($collection->contains('Xilef'));
+        $this->assertTrue($collection->contains(function ($value, $key) {
+            return $value === 'Xilef';
+        }));
+    }
 }
